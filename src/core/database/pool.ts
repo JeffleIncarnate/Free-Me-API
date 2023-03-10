@@ -17,3 +17,13 @@ export const pool: PoolClient = new Pool({
   password: password,
   port: port,
 });
+
+export function testConnecton(): boolean {
+  try {
+    pool.query("SELECT NOW()");
+  } catch (err: any) {
+    return false;
+  }
+
+  return true;
+}
