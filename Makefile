@@ -11,4 +11,3 @@ clean:
 prod:
 	@make build
 	@node dist/index.js
-
