@@ -7,6 +7,12 @@ let user = {
   phonenumber: "0211702350",
   password: "banana",
   scopes: {
-    canGetSelf: true,
+    getSelf: true,
+    mofifySelf: true,
+    deleteSelf: true,
+    getOtherUsers: false,
+    create_users: false,
+    delete_users: false,
+    update_users: false,
   },
 };
