@@ -12,8 +12,22 @@ export type User = {
     mofifySelf: true;
     deleteSelf: true;
     getOtherUsers: false;
-    create_users: false;
-    delete_users: false;
-    update_users: false;
+    createUsers: false;
+    deleteUsers: false;
+    updateUsers: false;
+  };
+};
+
+export type AccessTokenUser = {
+  uuid: string;
+  password: string;
+  scopes: {
+    getSelf: true;
+    mofifySelf: true;
+    deleteSelf: true;
+    getOtherUsers: false;
+    createUsers: false;
+    deleteUsers: false;
+    updateUsers: false;
   };
 };
