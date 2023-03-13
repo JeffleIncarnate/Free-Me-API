@@ -40,7 +40,6 @@ export type VerifyEmail = {
 
 export type AccessTokenUser = {
   uuid: string;
-  password: string;
   scopes: {
     getSelf: true;
     mofifySelf: true;
