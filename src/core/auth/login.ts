@@ -33,7 +33,6 @@ router.post("/login", async (req: Request, res: Response) => {
 
   let user: AccessTokenUser = {
     uuid: sqlRes.rows[0].uuid,
-    password: sqlRes.rows[0].password,
     scopes: {
       getSelf: true,
       mofifySelf: true,
