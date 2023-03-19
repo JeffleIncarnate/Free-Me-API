@@ -3,10 +3,18 @@ export type User = {
   username: string;
   firstname: string;
   lastname: string;
+  dateOfBirth: number;
+  address: string;
   email: string;
   phonenumber: string;
   password: string;
   type: string;
+  nzbn: number;
+  gst: number;
+  socials: {
+    facebook: string;
+    linkedIn: string;
+  };
   scopes: {
     getSelf: true;
     mofifySelf: true;
@@ -23,10 +31,18 @@ export type VerifyEmail = {
   username: string;
   firstname: string;
   lastname: string;
+  dateOfBirth: number;
+  address: string;
   email: string;
   phonenumber: string;
   password: string;
   type: string;
+  nzbn: number;
+  gst: number;
+  socials: {
+    facebook: string;
+    linkedIn: string;
+  };
   scopes: {
     getSelf: false;
     mofifySelf: false;
@@ -49,4 +65,14 @@ export type AccessTokenUser = {
     deleteUsers: false;
     updateUsers: false;
   };
+};
+
+export type CreatePost = {
+  postId: number;
+  posterId: string;
+  title: string;
+  description: string;
+  place: string;
+  company: string;
+  time: number;
 };
