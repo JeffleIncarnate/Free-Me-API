@@ -1,5 +1,6 @@
 import express, { Request, Response, Application } from "express";
 import chalk from "chalk";
+import cors from "cors";
 
 import { createTables } from "./core/database/tables";
 import { testConnecton } from "./core/database/pool";
@@ -11,6 +12,7 @@ const log = console.log;
 chalk.level = 1;
 
 app.use(express.json());
+app.use(cors());
 
 // Routes -- Auth
 const login = require("./core/auth/login");
@@ -18,6 +20,7 @@ const login = require("./core/auth/login");
 // Rouths -- User
 const getUserData = require("./routes/users/getUserData");
 const createUser = require("./routes/users/createUser");
+const jobOpportunities = require("./routes/users/jobOpportunities");
 
 // Use Routes -- Auth
 app.use("/freeme/auth", login);
@@ -25,6 +28,7 @@ app.use("/freeme/auth", login);
 // Use Routes -- User
 app.use("/freeme", getUserData);
 app.use("/freeme", createUser);
+app.use("/freeme", jobOpportunities);
 
 app.get("/", async (req: Request, res: Response) => {
   return res.send({ detail: "Welcome to the Free me API" });
@@ -43,8 +47,8 @@ async function startUp() {
   await testConnecton();
   log(chalk.blue("Connection Secure"), chalk.green("✓"));
 
-  await createTables();
-  log(chalk.blue("Tables Created"), chalk.green("✓"));
+  // await createTables();
+  // log(chalk.blue("Tables Created"), chalk.green("✓"));
 
   let hash = await hashPassword("test");
   (await verifyHash(hash, "test"))
