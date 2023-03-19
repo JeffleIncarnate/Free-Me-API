@@ -30,6 +30,11 @@ router.post("/createUserNoAuth", async (req: Request, res: Response) => {
     req.body.email,
     req.body.phonenumber,
     req.body.type,
+    req.body.dateOfBirth,
+    req.body.address,
+    req.body.nzbn,
+    req.body.gst,
+    req.body.type,
   ];
 
   if (!verifyArray(arrOfItems))
@@ -40,10 +45,18 @@ router.post("/createUserNoAuth", async (req: Request, res: Response) => {
     username: req.body.username,
     firstname: req.body.firstname,
     lastname: req.body.lastname,
+    dateOfBirth: req.body.dateOfBirth,
+    address: req.body.address,
     email: req.body.email,
     password: await hashPassword(req.body.password),
     phonenumber: req.body.phonenumber,
     type: req.body.type,
+    nzbn: req.body.nzbn,
+    gst: req.body.gst,
+    socials: {
+      facebook: req.body.facebook,
+      linkedIn: req.body.linkedIn,
+    },
     scopes: {
       getSelf: true,
       mofifySelf: true,
@@ -69,16 +82,21 @@ router.post("/createUserNoAuth", async (req: Request, res: Response) => {
   }
 
   query = {
-    text: "INSERT INTO public.users (uuid, username, firstname, lastname, password, email, phonenumber, type) VALUES($1, $2, $3, $4, $5, $6, $7, $8);",
+    text: "INSERT INTO public.users (uuid, username, firstname, lastname, dateOfBirth, address, password, email, phonenumber, type, nzbn, gst, socials) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);",
     values: [
       user.uuid,
       user.username,
       user.firstname,
       user.lastname,
+      user.dateOfBirth,
+      user.address,
       user.password,
       user.email,
       user.phonenumber,
       user.type,
+      user.nzbn,
+      user.gst,
+      user.socials,
     ],
   };
 
@@ -109,6 +127,11 @@ router.post("/createUserVerifyEmail", async (req: Request, res: Response) => {
     req.body.email,
     req.body.phonenumber,
     req.body.type,
+    req.body.dateOfBirth,
+    req.body.address,
+    req.body.nzbn,
+    req.body.gst,
+    req.body.type,
   ];
 
   if (!verifyArray(arrOfItems))
@@ -119,10 +142,18 @@ router.post("/createUserVerifyEmail", async (req: Request, res: Response) => {
     username: req.body.username,
     firstname: req.body.firstname,
     lastname: req.body.lastname,
+    dateOfBirth: req.body.dateOfBirth,
+    address: req.body.address,
     email: req.body.email,
     password: await hashPassword(req.body.password),
     phonenumber: req.body.phonenumber,
     type: req.body.type,
+    nzbn: req.body.nzbn,
+    gst: req.body.gst,
+    socials: {
+      facebook: req.body.facebook ?? null,
+      linkedIn: req.body.linkedIn ?? null,
+    },
     scopes: {
       getSelf: false,
       mofifySelf: false,
@@ -168,7 +199,7 @@ router.post("/createUserVerifyEmail", async (req: Request, res: Response) => {
     }
   );
 
-  return res.send("Successfully sent email");
+  return res.send({ detail: "Successfully sent email" });
 });
 
 router.post("/createUserFromToken", async (req: Request, res: Response) => {
@@ -189,10 +220,18 @@ router.post("/createUserFromToken", async (req: Request, res: Response) => {
     username: payload.username,
     firstname: payload.firstname,
     lastname: payload.lastname,
+    dateOfBirth: payload.dateOfBirth,
+    address: payload.address,
     email: payload.email,
-    phonenumber: payload.phonenumber,
     password: payload.password,
+    phonenumber: payload.phonenumber,
     type: payload.type,
+    nzbn: payload.nzbn,
+    gst: payload.gst,
+    socials: {
+      facebook: payload.socials.facebook,
+      linkedIn: payload.socials.linkedIn,
+    },
     scopes: {
       getSelf: true,
       mofifySelf: true,
@@ -205,16 +244,21 @@ router.post("/createUserFromToken", async (req: Request, res: Response) => {
   };
 
   let query = {
-    text: "INSERT INTO public.users (uuid, username, firstname, lastname, password, email, phonenumber, type) VALUES($1, $2, $3, $4, $5, $6, $7, $8);",
+    text: "INSERT INTO public.verifyUsers (uuid, username, firstname, lastname, dateOfBirth, address, password, email, phonenumber, type, nzbn, gst, socials) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);",
     values: [
       user.uuid,
       user.username,
       user.firstname,
       user.lastname,
+      user.dateOfBirth,
+      user.address,
       user.password,
       user.email,
       user.phonenumber,
       user.type,
+      user.nzbn,
+      user.gst,
+      user.socials,
     ],
   };
 
@@ -224,7 +268,13 @@ router.post("/createUserFromToken", async (req: Request, res: Response) => {
     return res.status(500).send({ detail: err.stack });
   }
 
-  return res.status(201).send({ detail: "Successfuly created user" });
+  return res.status(201).send({
+    detail: "Success!",
+    details: {
+      account:
+        "Your account will be reviewed, this should take 2-3 business days",
+    },
+  });
 });
 
 module.exports = router;
