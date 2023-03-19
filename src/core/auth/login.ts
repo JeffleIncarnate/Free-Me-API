@@ -9,6 +9,8 @@ import { AccessTokenUser } from "../data/types";
 
 let router = express.Router();
 
+router.use(express.json());
+
 router.post("/login", async (req: Request, res: Response) => {
   let arrOfItems = [req.body.username, req.body.password];
 
