@@ -76,3 +76,9 @@ export type CreatePost = {
   company: string;
   time: number;
 };
+
+export type UpdateUser = {
+  uuid: string;
+  col: string;
+  dataTo: string;
+};
