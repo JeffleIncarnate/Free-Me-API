@@ -159,6 +159,8 @@ router.put("/updateUser", async (req: Request, res: Response) => {
   let response: boolean = await updateUser(user.uuid, user.col, user.dataTo);
 
   if (!response) return res.status(400).send({ detail: "Unknown error" });
+
+  return res.send({ detail: "Updated user" });
 });
 
 module.exports = router;
