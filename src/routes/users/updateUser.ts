@@ -60,7 +60,7 @@ let updateUser = async (
     }
   } else if (col === "password") {
     query["text"] = "UPDATE users SET password=$1 WHERE uuid=$2";
-    query["values"] = [dataTo, uuid];
+    query["values"] = [await hashPassword(dataTo), uuid];
 
     try {
       await pool.query(query);
