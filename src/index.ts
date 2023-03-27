@@ -22,6 +22,7 @@ const getUserData = require("./routes/users/getUserData");
 const createUser = require("./routes/users/createUser");
 const jobOpportunities = require("./routes/users/jobOpportunities");
 const verifyUserFromVerifyTable = require("./routes/users/verifyUserFromVerifyTable");
+const updateUser = require("./routes/users/updateUser");
 
 // Use Routes -- Auth
 app.use("/freeme/auth", login);
@@ -31,6 +32,7 @@ app.use("/freeme", getUserData);
 app.use("/freeme", createUser);
 app.use("/freeme", jobOpportunities);
 app.use("/freeme", verifyUserFromVerifyTable);
+app.use("/freeme", updateUser);
 
 app.get("/", async (req: Request, res: Response) => {
   return res.send({ detail: "Welcome to the Free me API" });
