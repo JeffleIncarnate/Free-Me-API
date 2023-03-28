@@ -20,8 +20,8 @@ router.get("/getAllUsers", async (req: Request, res: Response) => {
 
 router.get("/getUser", async (req: Request, res: Response) => {
   const query = {
-    text: "SELECT * FROM public.users WHERE uuid=$1",
-    values: [req.query.uuid],
+    text: "SELECT * FROM public.users WHERE email=$1",
+    values: [req.query.username],
   };
 
   let sqlRes;

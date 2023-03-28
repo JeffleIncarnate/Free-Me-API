@@ -20,7 +20,7 @@ router.post("/login", async (req: Request, res: Response) => {
   let sqlRes;
 
   let query = {
-    text: "SELECT password, uuid FROM public.users WHERE username=$1",
+    text: "SELECT password, uuid FROM public.users WHERE email=$1",
     values: [arrOfItems[0]],
   };
 
