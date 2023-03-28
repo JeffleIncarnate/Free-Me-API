@@ -30,6 +30,9 @@ router.post("/login", async (req: Request, res: Response) => {
     return res.status(500).send({ detail: err.stack });
   }
 
+  if (sqlRes.rowCount === 0)
+    return res.status(400).send({ detail: "User does not exist" });
+
   if (!(await verifyHash(sqlRes.rows[0].password, arrOfItems[1])))
     return res.status(401).send({ detail: "Incorrect password" });
 
