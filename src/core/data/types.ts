@@ -82,3 +82,14 @@ export type UpdateUser = {
   col: string;
   dataTo: string;
 };
+
+export interface IStatementOfWork {
+  name: string;
+  description: string;
+  uuid: string;
+  client: string;
+  consultant: string;
+  tasks: [];
+  timeline: [];
+  agreed: {};
+}
