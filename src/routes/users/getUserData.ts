@@ -21,7 +21,7 @@ router.get("/getAllUsers", async (req: Request, res: Response) => {
 router.get("/getUser", async (req: Request, res: Response) => {
   const query = {
     text: "SELECT * FROM public.users WHERE email=$1",
-    values: [req.query.username],
+    values: [req.query.email],
   };
 
   let sqlRes;

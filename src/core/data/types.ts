@@ -26,6 +26,34 @@ export type User = {
   };
 };
 
+export type CreateUser = {
+  uuid: string;
+  firstname: string;
+  lastname: string;
+  dateOfBirth: number;
+  address: string;
+  email: string;
+  phonenumber: string;
+  password: string;
+  type: string;
+  nzbn: number;
+  gst: number;
+  socials: {
+    facebook: string;
+    linkedIn: string;
+  };
+  scopes: {
+    getSelf: true;
+    mofifySelf: true;
+    deleteSelf: true;
+    getOtherUsers: false;
+    createUsers: false;
+    deleteUsers: false;
+    updateUsers: false;
+  };
+  profile: {};
+};
+
 export type VerifyEmail = {
   uuid: string;
   username: string;

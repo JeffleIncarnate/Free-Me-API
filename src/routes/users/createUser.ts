@@ -5,7 +5,7 @@ require("dotenv").config({ path: `${__dirname}/../../.env` });
 
 import { pool } from "../../core/database/pool";
 import { hashPassword } from "../../core/argon2/argon2";
-import { User, VerifyEmail } from "../../core/data/types";
+import { User, CreateUser, VerifyEmail } from "../../core/data/types";
 import { verifyArray } from "../../core/verifyArray/verifyArray";
 import { createToken } from "../../core/jwt/jwt";
 import { decryptToken } from "../../core/jwt/jwt";
@@ -23,7 +23,6 @@ router.post("/createUserNoAuth", async (req: Request, res: Response) => {
     });
 
   const arrOfItems = [
-    req.body.username,
     req.body.firstname,
     req.body.lastname,
     req.body.password,
@@ -35,16 +34,16 @@ router.post("/createUserNoAuth", async (req: Request, res: Response) => {
     req.body.nzbn,
     req.body.gst,
     req.body.type,
+    req.body.profile,
   ];
 
   if (!verifyArray(arrOfItems))
     return res.send({ detail: "Provide all items" });
 
-  const user: User = {
+  const user: CreateUser = {
     uuid: crypto.randomUUID(),
-    username: req.body.username,
-    firstname: req.body.firstname,
-    lastname: req.body.lastname,
+    firstname: req.body.firstname.toLowerCase(),
+    lastname: req.body.lastname.toLowerCase(),
     dateOfBirth: req.body.dateOfBirth,
     address: req.body.address,
     email: req.body.email,
@@ -66,6 +65,7 @@ router.post("/createUserNoAuth", async (req: Request, res: Response) => {
       deleteUsers: false,
       updateUsers: false,
     },
+    profile: req.body.profile,
   };
 
   let query: any = {
@@ -82,10 +82,9 @@ router.post("/createUserNoAuth", async (req: Request, res: Response) => {
   }
 
   query = {
-    text: "INSERT INTO public.users (uuid, username, firstname, lastname, dateOfBirth, address, password, email, phonenumber, type, nzbn, gst, socials) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);",
+    text: "INSERT INTO public.users (uuid, firstname, lastname, dateOfBirth, address, password, email, phonenumber, type, nzbn, gst, socials, profile) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);",
     values: [
       user.uuid,
-      user.username,
       user.firstname,
       user.lastname,
       user.dateOfBirth,
@@ -97,6 +96,7 @@ router.post("/createUserNoAuth", async (req: Request, res: Response) => {
       user.nzbn,
       user.gst,
       user.socials,
+      user.profile,
     ],
   };
 

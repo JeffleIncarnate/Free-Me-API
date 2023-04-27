@@ -2,7 +2,7 @@ import express, { Request, Response, Application } from "express";
 import chalk from "chalk";
 import cors from "cors";
 
-import { createTables } from "./core/database/tables";
+// import { createTables } from "./core/database/tables";
 import { testConnecton } from "./core/database/pool";
 import { hashPassword, verifyHash } from "./core/argon2/argon2";
 
@@ -23,6 +23,7 @@ const createUser = require("./routes/users/createUser");
 const jobOpportunities = require("./routes/users/jobOpportunities");
 const verifyUserFromVerifyTable = require("./routes/users/verifyUserFromVerifyTable");
 const updateUser = require("./routes/users/updateUser");
+const deleteUser = require("./routes/users/deleteUser");
 
 // Routes -- SOW
 const sow = require("./routes/statementOfWork/statementOfWork");
@@ -36,6 +37,7 @@ app.use("/freeme", createUser);
 app.use("/freeme", jobOpportunities);
 app.use("/freeme", verifyUserFromVerifyTable);
 app.use("/freeme", updateUser);
+app.use("/freeme", deleteUser);
 
 // Use Routes -- SOW
 app.use("/freeme", sow);
