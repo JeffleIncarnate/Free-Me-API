@@ -13,12 +13,16 @@ import { decryptToken } from "../../core/jwt/jwt";
 const router = express.Router();
 
 router.post("/createUserNoAuth", async (req: Request, res: Response) => {
-  if (req.body.type !== "consultant" && req.body.type !== "client")
+  if (
+    req.body.type !== "consultant" &&
+    req.body.type !== "client" &&
+    req.body.type !== "freerider"
+  )
     return res.send({
       detail: `Can not accept type: ${req.body.type}`,
       details: {
         provided: req.body.type,
-        required: "consultant or client",
+        required: "consultant, client or freerider",
       },
     });
 
@@ -33,7 +37,6 @@ router.post("/createUserNoAuth", async (req: Request, res: Response) => {
     req.body.address,
     req.body.nzbn,
     req.body.gst,
-    req.body.type,
     req.body.profile,
   ];
 
@@ -110,12 +113,16 @@ router.post("/createUserNoAuth", async (req: Request, res: Response) => {
 });
 
 router.post("/createUserVerifyEmail", async (req: Request, res: Response) => {
-  if (req.body.type !== "consultant" && req.body.type !== "client")
+  if (
+    req.body.type !== "consultant" &&
+    req.body.type !== "client" &&
+    req.body.type !== "freerider"
+  )
     return res.send({
       detail: `Can not accept type: ${req.body.type}`,
       details: {
         provided: req.body.type,
-        required: "consultant or client",
+        required: "consultant, client or freerider",
       },
     });
 
