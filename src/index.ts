@@ -25,6 +25,8 @@ const verifyUserFromVerifyTable = require("./routes/users/verifyUserFromVerifyTa
 const updateUser = require("./routes/users/updateUser");
 const deleteUser = require("./routes/users/deleteUser");
 
+const postConsultantNoAuth = require("./routes/users/postConsultantNoAuth");
+
 // Routes -- SOW
 const sow = require("./routes/statementOfWork/statementOfWork");
 
@@ -38,6 +40,8 @@ app.use("/freeme", jobOpportunities);
 app.use("/freeme", verifyUserFromVerifyTable);
 app.use("/freeme", updateUser);
 app.use("/freeme", deleteUser);
+
+app.use("/freeme", postConsultantNoAuth);
 
 // Use Routes -- SOW
 app.use("/freeme", sow);

@@ -1,0 +1,44 @@
+// Consultant
+{
+  "type": "freerider",
+  "firstname": "John",
+  "lastname": "Doe",
+  "password": "john123",
+  "email": "john@gmail.com",
+  "phonenumber": "0211702350",
+  "dateOfBirth": 1688418812,
+  "address": "asfsdfasfd",
+  "nzbn": 120983213,
+  "gst": 19837123,
+  "profile": {
+    "awards": ["Lorem Ipsum", "Lorem ipsum dolar"],
+    "skills": ["Lorem", "Lorem ipsum", "Lorem ipsum dolar"],
+    "values": [
+      "Lorem",
+      "Lorem ipsum",
+      "Lorem ipsum dolar",
+      "Lorem ipsum dolar sit"
+    ],
+    "hobbies": ["Lorem"],
+    "timeline": [
+      {
+        "time": 1005220800,
+        "title": "Lorem ipsum",
+        "description": "Lorem ipsum dolor sit amet"
+      }
+    ],
+    "ambitions": ["Lorem ipsum", "Lorem ipsum dolor sit amet"],
+    "education": [
+      {
+        "school": "Lorem school",
+        "endYear": 2000,
+        "startYear": 2000
+      }
+    ],
+    "cvHighlights": [
+      "Lorem ipsum dolar, sit amet",
+      "Lorem",
+      "Lorem ipsum dolar"
+    ]
+  }
+}

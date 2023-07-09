@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import crypto from "crypto";
+import fileUpload from "express-fileupload";
 var email = require("../../../node_modules/emailjs/email");
 require("dotenv").config({ path: `${__dirname}/../../.env` });
 
@@ -9,108 +10,135 @@ import { User, CreateUser, VerifyEmail } from "../../core/data/types";
 import { verifyArray } from "../../core/verifyArray/verifyArray";
 import { createToken } from "../../core/jwt/jwt";
 import { decryptToken } from "../../core/jwt/jwt";
+import {
+  defaultProfileBackground,
+  defaultProfilePicture,
+} from "../../core/data/images";
 
 const router = express.Router();
 
-router.post("/createUserNoAuth", async (req: Request, res: Response) => {
-  if (
-    req.body.type !== "consultant" &&
-    req.body.type !== "client" &&
-    req.body.type !== "freerider"
-  )
-    return res.send({
-      detail: `Can not accept type: ${req.body.type}`,
-      details: {
-        provided: req.body.type,
-        required: "consultant, client or freerider",
+router.post(
+  "/createUserNoAuth",
+  fileUpload(),
+  async (req: Request | any, res: Response) => {
+    let banner;
+    let profilePicture;
+
+    // Checking to make sure the files were uploaded
+    if (!req.files || Object.keys(req.files).length === 0) {
+      return res.status(400).send("No files were uploaded.");
+    }
+
+    profilePicture =
+      req.files.profilePicture !== undefined
+        ? req.files.profilePicture.data.toString("base64")
+        : defaultProfilePicture;
+    banner =
+      req.files.banner !== undefined
+        ? req.files.banner.data.toString("base64")
+        : defaultProfileBackground;
+
+    if (
+      req.body.type !== "consultant" &&
+      req.body.type !== "client" &&
+      req.body.type !== "freerider"
+    )
+      return res.send({
+        detail: `Can not accept type: ${req.body.type}`,
+        details: {
+          provided: req.body.type,
+          required: "consultant, client or freerider",
+        },
+      });
+
+    const arrOfItems = [
+      req.body.firstname,
+      req.body.lastname,
+      req.body.password,
+      req.body.email,
+      req.body.phonenumber,
+      req.body.type,
+      req.body.dateOfBirth,
+      req.body.address,
+      req.body.nzbn,
+      req.body.gst,
+      req.body.profile,
+    ];
+
+    if (!verifyArray(arrOfItems))
+      return res.send({ detail: "Provide all items" });
+
+    const user: CreateUser = {
+      uuid: crypto.randomUUID(),
+      firstname: req.body.firstname.toLowerCase(),
+      lastname: req.body.lastname.toLowerCase(),
+      dateOfBirth: req.body.dateOfBirth,
+      address: req.body.address,
+      email: req.body.email,
+      password: await hashPassword(req.body.password),
+      phonenumber: req.body.phonenumber,
+      type: req.body.type,
+      nzbn: req.body.nzbn,
+      gst: req.body.gst,
+      socials: {
+        facebook: req.body.facebook,
+        linkedIn: req.body.linkedIn,
       },
-    });
+      scopes: {
+        getSelf: true,
+        mofifySelf: true,
+        deleteSelf: true,
+        getOtherUsers: false,
+        createUsers: false,
+        deleteUsers: false,
+        updateUsers: false,
+      },
+      profile: req.body.profile,
+    };
 
-  const arrOfItems = [
-    req.body.firstname,
-    req.body.lastname,
-    req.body.password,
-    req.body.email,
-    req.body.phonenumber,
-    req.body.type,
-    req.body.dateOfBirth,
-    req.body.address,
-    req.body.nzbn,
-    req.body.gst,
-    req.body.profile,
-  ];
+    let query: any = {
+      text: "SELECT * FROM public.users WHERE uuid=$1",
+      values: [user.uuid],
+    };
 
-  if (!verifyArray(arrOfItems))
-    return res.send({ detail: "Provide all items" });
+    for (;;) {
+      let sqlRes = await pool.query(query);
 
-  const user: CreateUser = {
-    uuid: crypto.randomUUID(),
-    firstname: req.body.firstname.toLowerCase(),
-    lastname: req.body.lastname.toLowerCase(),
-    dateOfBirth: req.body.dateOfBirth,
-    address: req.body.address,
-    email: req.body.email,
-    password: await hashPassword(req.body.password),
-    phonenumber: req.body.phonenumber,
-    type: req.body.type,
-    nzbn: req.body.nzbn,
-    gst: req.body.gst,
-    socials: {
-      facebook: req.body.facebook,
-      linkedIn: req.body.linkedIn,
-    },
-    scopes: {
-      getSelf: true,
-      mofifySelf: true,
-      deleteSelf: true,
-      getOtherUsers: false,
-      createUsers: false,
-      deleteUsers: false,
-      updateUsers: false,
-    },
-    profile: req.body.profile,
-  };
+      if (sqlRes.rowCount === 0) break;
 
-  let query: any = {
-    text: "SELECT * FROM public.users WHERE uuid=$1",
-    values: [user.uuid],
-  };
+      if (sqlRes.rows[0].uuid !== user.uuid) break;
+    }
 
-  for (;;) {
-    let sqlRes = await pool.query(query);
+    query = {
+      text: "INSERT INTO public.users (uuid, firstname, lastname, dateOfBirth, address, password, email, phonenumber, type, nzbn, gst, socials, profile, profilePicture, banner) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15);",
+      values: [
+        user.uuid,
+        user.firstname,
+        user.lastname,
+        user.dateOfBirth,
+        user.address,
+        user.password,
+        user.email,
+        user.phonenumber,
+        user.type,
+        user.nzbn,
+        user.gst,
+        user.socials,
+        user.profile,
+        profilePicture,
+        banner,
+      ],
+    };
 
-    if (sqlRes.rowCount === 0) break;
+    try {
+      await pool.query(query);
+    } catch (err: any) {
+      return res.status(500).send({ detail: err.stack });
+    }
 
-    if (sqlRes.rows[0].uuid !== user.uuid) break;
+    return res.status(201).send({ detail: "Successfuly created user" });
   }
-
-  query = {
-    text: "INSERT INTO public.users (uuid, firstname, lastname, dateOfBirth, address, password, email, phonenumber, type, nzbn, gst, socials, profile) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);",
-    values: [
-      user.uuid,
-      user.firstname,
-      user.lastname,
-      user.dateOfBirth,
-      user.address,
-      user.password,
-      user.email,
-      user.phonenumber,
-      user.type,
-      user.nzbn,
-      user.gst,
-      user.socials,
-      user.profile,
-    ],
-  };
-
-  try {
-    await pool.query(query);
-  } catch (err: any) {
-    return res.status(500).send({ detail: err.stack });
-  }
-
-  return res.status(201).send({ detail: "Successfuly created user" });
-});
+);
 
 router.post("/createUserVerifyEmail", async (req: Request, res: Response) => {
   if (
