@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "npx nodemon"
+    "start": "vercel dev",
+    "deploy": "vercel deploy --prod",
+    "dev": "npx nodemon",
+    "build": "npx tsc"
   },
   "keywords": [],
   "author": "",

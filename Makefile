@@ -2,7 +2,6 @@ dev:
 	@npm run dev
 
 build:
-	@rm -rf dist/
 	@npx tsc 
 
 clean:
