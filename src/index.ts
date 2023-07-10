@@ -26,6 +26,8 @@ const updateUser = require("./routes/users/updateUser");
 const deleteUser = require("./routes/users/deleteUser");
 
 const postConsultantNoAuth = require("./routes/users/postConsultantNoAuth");
+const postClientNoAuth = require("./routes/users/postClientNoAuth");
+const postFreeriderNoAuth = require("./routes/users/postFreeriderNoAuth");
 
 // Routes -- SOW
 const sow = require("./routes/statementOfWork/statementOfWork");
@@ -42,6 +44,8 @@ app.use("/freeme", updateUser);
 app.use("/freeme", deleteUser);
 
 app.use("/freeme", postConsultantNoAuth);
+app.use("/freeme", postClientNoAuth);
+app.use("/freeme", postFreeriderNoAuth);
 
 // Use Routes -- SOW
 app.use("/freeme", sow);
