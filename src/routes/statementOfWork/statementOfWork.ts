@@ -129,6 +129,7 @@ router.get(
     try {
       sqlRes = await pool.query(query);
     } catch (err: any) {
+      console.log("ERROR HERE 1");
       return res.status(500).send({ detail: err.stack });
     }
 
@@ -136,6 +137,10 @@ router.get(
       return res.status(400).send({ detail: "This user does not exist" });
 
     let type = sqlRes.rows[0].type;
+
+    if (type === "freerider") {
+      type = "consultant";
+    }
 
     query = {
       text: `SELECT * FROM public.statementofwork WHERE ${type}=$1`,
@@ -145,6 +150,7 @@ router.get(
     try {
       sqlRes = await pool.query(query);
     } catch (err: any) {
+      console.log("ERROR HERE 2");
       return res.status(500).send({ detail: err.stack });
     }
 
