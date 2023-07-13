@@ -129,7 +129,6 @@ router.get(
     try {
       sqlRes = await pool.query(query);
     } catch (err: any) {
-      console.log("ERROR HERE 1");
       return res.status(500).send({ detail: err.stack });
     }
 
@@ -150,7 +149,6 @@ router.get(
     try {
       sqlRes = await pool.query(query);
     } catch (err: any) {
-      console.log("ERROR HERE 2");
       return res.status(500).send({ detail: err.stack });
     }
 
