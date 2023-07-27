@@ -137,9 +137,12 @@ router.get(
 
     let type = sqlRes.rows[0].type;
 
+    console.log(type);
     if (type === "freerider") {
       type = "consultant";
     }
+
+    console.log(type);
 
     query = {
       text: `SELECT * FROM public.statementofwork WHERE ${type}=$1`,
@@ -157,5 +160,3 @@ router.get(
 );
 
 module.exports = router;
-
-//
