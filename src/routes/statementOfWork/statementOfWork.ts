@@ -34,7 +34,7 @@ router.post("/createStatementOfWork", async (req: Request, res: Response) => {
     timeline: arrOfItems[3],
     agreed: JSON.parse(
       JSON.stringify({
-        client: true,
+        client: false,
         consultant: false,
       })
     ),
@@ -88,7 +88,7 @@ router.post("/createStatementOfWork", async (req: Request, res: Response) => {
   statementOfWork.consultant = sqlRes.rows[0].uuid;
 
   query = {
-    text: "INSERT INTO public.statementofwork (uuid, client, consultant, tasks, timeline, name, description, agreed) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
+    text: "INSERT INTO public.statementofwork (uuid, client, consultant, tasks, timeline, name, description, agreed, clientemail, consultantemail) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)",
     values: [
       statementOfWork.uuid,
       statementOfWork.client,
@@ -98,6 +98,8 @@ router.post("/createStatementOfWork", async (req: Request, res: Response) => {
       statementOfWork.name,
       statementOfWork.description,
       JSON.stringify(statementOfWork.agreed),
+      req.body.clientEmail,
+      req.body.consultantEmail,
     ],
   };
 
@@ -110,8 +112,33 @@ router.post("/createStatementOfWork", async (req: Request, res: Response) => {
   return res.send({ detail: "Statement of work created" });
 });
 
-router.post("/updateStatementOfWork", async (req: Request, res: Response) => {
+router.post("/updateSowTasks", async (req: Request, res: Response) => {
   let uuidOfStatementOfWork = req.body.uuid;
+  let tasks = req.body.tasks;
+  let timeline = req.body.timeline;
+
+  let arrOfItems = [uuidOfStatementOfWork, timeline, tasks];
+
+  if (!verifyArray(arrOfItems)) {
+    return res.status(400).send({ detail: "Provide all items" });
+  }
+
+  let query = {
+    text: `UPDATE public.statementofwork SET tasks=$1,timeline=$2 WHERE uuid=$3`,
+    values: [
+      JSON.stringify(tasks),
+      JSON.stringify(timeline),
+      uuidOfStatementOfWork,
+    ],
+  };
+
+  try {
+    await pool.query(query);
+  } catch (err: any) {
+    return res.status(500).send({ detail: err.stack });
+  }
+
+  return res.send({ detail: "Successfully updated statement of work" });
 });
 
 router.get(
@@ -137,12 +164,9 @@ router.get(
 
     let type = sqlRes.rows[0].type;
 
-    console.log(type);
     if (type === "freerider") {
       type = "consultant";
     }
-
-    console.log(type);
 
     query = {
       text: `SELECT * FROM public.statementofwork WHERE ${type}=$1`,
