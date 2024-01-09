@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction } from "express";
 import morgan from "morgan";
 
 import { logger } from "./core/logger/logger";
@@ -12,7 +12,7 @@ app.get("/", async (req, res) => {
 });
 
 app.get("/elo", async (req, res, next) => {
-  next("e");
+  return next(new HTTPErrors.Omg());
 });
 
 app.listen(3000, () => {

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "pn dlx nodemon",
+    "dev": "pnpm dlx nodemon",
     "build": "rimraf ./build && tsc",
     "start": "pnpm run build && node build/index.js"
   },
