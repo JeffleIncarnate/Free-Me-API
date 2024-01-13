@@ -27,13 +27,13 @@ enum Tier {
 
 model User {
   id                  String      @id @unique 
-  fistname            String
+  firstname           String
   lastname            String
   password            String
   email               String      @unique
   phonenumber         String
   type                Type 
-  dateOfBirth         DateTime 
+  dateOfBirth         String 
   address             String
   nzbn                BigInt
   gst                 BigInt
@@ -41,6 +41,9 @@ model User {
   createdAt           DateTime    @default(now())
   profilePicture      String
   background          String
+  followers           String[]
+  following           String[]
+  connections         String[]
   clientProfile       Client?
   consultantProfile   Consultant?
 }
@@ -50,6 +53,11 @@ model Client {
   description     String
   location        String
   website         String
+  ambitions       String[]
+  awards          String[]
+  values          String[]
+  timeline        Json
+  socialMedia     Json
   feedBack        FeedbackClient[]
   user            User    @relation(fields: [userId], references: [id])
   userId          String  @unique
@@ -67,6 +75,7 @@ model Consultant {
   ambitions       String[]
   awards          String[]
   hobbies         String[]
+  timeline        Json
   user            User    @relation(fields: [userId], references: [id])
   userId          String  @unique
 }
