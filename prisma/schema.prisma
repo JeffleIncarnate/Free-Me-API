@@ -98,5 +98,5 @@ model FeedbackClient {
 }
 
 model RefreshToken {
-  token String @id
+  id String @id
 }
