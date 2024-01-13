@@ -96,3 +96,7 @@ model FeedbackClient {
   client          Client       @relation(fields: [clientId], references: [id])
   clientId        Int          @unique
 }
+
+model RefreshToken {
+  token String @id
+}
