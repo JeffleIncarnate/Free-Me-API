@@ -8,3 +8,11 @@ export class PrismaErr extends HTTPError {
     });
   }
 }
+
+export class PrismaUnknownError extends HTTPError {
+  constructor() {
+    super(500, {
+      reason: "Unknown database error",
+    });
+  }
+}
