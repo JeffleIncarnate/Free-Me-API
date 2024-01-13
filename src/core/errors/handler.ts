@@ -9,7 +9,7 @@ export function errorHandler(
   next: NextFunction
 ) {
   if (!(err instanceof HTTPError)) {
-    return next();
+    return next(err);
   }
 
   const statusCode = err.status || 500;
