@@ -10,6 +10,7 @@ import {
   PrismaClientValidationError,
 } from "@prisma/client/runtime/library";
 import { createAccessToken, createRefreshToken } from "../jwt/jwt";
+import { randomUUID } from "crypto";
 
 export const login = express.Router();
 
@@ -59,12 +60,14 @@ login.post(
 
     // generate token
     const accessToken = createAccessToken(user.role, user.id);
-    const refreshToken = createRefreshToken(user.id);
+
+    const refreshTokenId = randomUUID();
+    const refreshToken = createRefreshToken(user.id, refreshTokenId);
 
     // insert into refresh token database
     await pool.refreshToken.create({
       data: {
-        token: refreshToken,
+        id: refreshTokenId,
       },
     });
 
