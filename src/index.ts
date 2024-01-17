@@ -20,6 +20,8 @@ import { refresh } from "./core/auth/refresh";
 
 // User
 import { userPost } from "./routes/user/create/create";
+import { self } from "./routes/user/get/self";
+import { allUsers } from "./routes/user/get/all";
 
 // Use Routes
 // Auth
@@ -27,6 +29,8 @@ app.use("/v1/api/auth/login", login);
 app.use("/v1/api/auth/refresh", refresh);
 
 app.use("/v1/api/user", userPost);
+app.use("/v1/api/user", allUsers);
+app.use("/v1/api/user/self", self);
 
 app.get("/", async (req, res) => {
   return res.sendStatus(200);
