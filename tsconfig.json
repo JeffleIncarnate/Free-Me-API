@@ -1,17 +1,17 @@
 {
   "compilerOptions": {
+    "target": "ESNext",
     "module": "commonjs",
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "es6",
+    "lib": ["es6"],
+    "allowJs": true,
+    "outDir": "build",
+    "rootDir": "src",
+    "strict": true,
     "noImplicitAny": true,
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "outDir": "dist",
-    "baseUrl": ".",
-    "paths": {
-      "*": ["node_modules/*", "src/types/*"]
-    }
+    "esModuleInterop": true,
+    "resolveJsonModule": true
   },
-  "include": ["./src/**/*"]
+  "ts-node": {
+    "files": true
+  }
 }
