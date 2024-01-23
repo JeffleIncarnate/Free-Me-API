@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Type {
+  CLIENT
+  CONSULTANT
+  FREERIDER
+}
+
+enum Role {
+  ADMIN
+  GENERAL
+}
+
+enum Tier {
+  BRONZE
+}
+
+model User {
+  id                  String      @id @unique 
+  firstname           String
+  lastname            String
+  password            String
+  email               String      @unique
+  phonenumber         String
+  type                Type 
+  dateOfBirth         String 
+  address             String
+  nzbn                BigInt
+  gst                 BigInt
+  role                Role
+  createdAt           DateTime    @default(now())
+  profilePicture      String
+  background          String
+  followers           String[]
+  following           String[]
+  connections         String[]
+  clientProfile       Client?
+  consultantProfile   Consultant?
+}
+
+model Client {
+  id              Int     @id @default(autoincrement())
+  description     String
+  location        String
+  website         String
+  ambitions       String[]
+  awards          String[]
+  values          String[]
+  timeline        Json
+  socialMedia     Json
+  feedBack        FeedbackClient[]
+  user            User    @relation(fields: [userId], references: [id])
+  userId          String  @unique
+}
+
+model Consultant {
+  id              Int     @id @default(autoincrement())
+  description     String
+  location        String
+  tier            Tier
+  values          String[]
+  feedBack        FeedbackConsultant[]
+  skills          String[]
+  education       String[]
+  ambitions       String[]
+  awards          String[]
+  hobbies         String[]
+  timeline        Json
+  user            User    @relation(fields: [userId], references: [id])
+  userId          String  @unique
+}
+
+
+model FeedbackConsultant {
+  id              Int          @id @default(autoincrement())
+  from            String
+  feedback        String
+  consultant      Consultant   @relation(fields: [consultantId], references: [id])
+  consultantId    Int          @unique
+}
+
+model FeedbackClient {
+  id              Int          @id @default(autoincrement())
+  from            String
+  feedback        String
+  client          Client       @relation(fields: [clientId], references: [id])
+  clientId        Int          @unique
+}
+
+model RefreshToken {
+  id String @id
+}
