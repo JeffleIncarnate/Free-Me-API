@@ -4,10 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "vercel dev",
-    "deploy": "vercel deploy --prod",
-    "dev": "npx nodemon",
-    "build": "npx tsc"
+    "dev": "pnpm dlx nodemon",
+    "build": "rimraf ./build && tsc",
+    "start": "pnpm run build && node build/index.js"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +16,7 @@
     "@types/express": "^4.17.21",
     "@types/express-fileupload": "^1.4.4",
     "@types/jsonwebtoken": "^9.0.5",
+    "@types/morgan": "^1.9.9",
     "@types/node": "^18.19.8",
     "@types/pg": "^8.10.9",
     "@types/ws": "^8.5.10",
@@ -28,15 +28,17 @@
   "dependencies": {
     "@prisma/client": "5.8.1",
     "argon2": "^0.30.3",
-    "chalk": "^4.1.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.2",
     "emailjs": "^2.2.0",
     "express": "^4.18.2",
     "express-fileupload": "^1.4.3",
     "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
     "pg": "^8.11.3",
     "winston": "^3.11.0",
-    "ws": "^8.16.0"
+    "ws": "^8.16.0",
+    "zod": "^3.22.4",
+    "zod-express-middleware": "^1.4.0"
   }
 }
