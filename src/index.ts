@@ -1,21 +1,19 @@
 import "dotenv/config";
 
-import express, { Request, Response, Application } from "express";
-import chalk from "chalk";
+import express from "express";
 import cors from "cors";
+import morgan from "morgan";
 
 import { logger } from "./v2/core/logger/logger";
 
-const app: Application = express();
-let port = 3000;
-const log = console.log;
-chalk.level = 1;
+const app = express();
 
+app.use(morgan("dev"));
 app.use(express.json());
 app.use(cors());
 
 // Routes -- Auth
-const login = require("./v1/core/auth/login");
+const loginv1 = require("./v1/core/auth/login");
 
 // Rouths -- User
 const getUserData = require("./v1/routes/users/getUserData");
@@ -33,7 +31,7 @@ const postFreeriderNoAuth = require("./v1/routes/users/postFreeriderNoAuth");
 const sow = require("./v1/routes/statementOfWork/statementOfWork");
 
 // Use Routes -- Auth
-app.use("/freeme/auth", login);
+app.use("/freeme/auth", loginv1);
 
 // Use Routes -- User
 app.use("/freeme", getUserData);
@@ -51,19 +49,34 @@ app.use("/freeme", postFreeriderNoAuth);
 app.use("/freeme", sow);
 
 // v2 API
+// auth
+import { login } from "./v2/routes/auth/login";
+import { refresh } from "./v2/routes/auth/refresh";
 
-app.get("/", async (req: Request, res: Response) => {
+// user
+import { userPost } from "./v2/routes/user/create";
+import { allUsers } from "./v2/routes/user/get/all";
+import { self } from "./v2/routes/user/get/self";
+
+app.use("/v2/api/auth/login", login);
+app.use("/v2/api/auth/refresh", refresh);
+
+app.use("/v1/api/user", userPost);
+app.use("/v1/api/user", allUsers);
+app.use("/v1/api/user/self", self);
+
+app.get("/", async (req, res) => {
   return res.sendStatus(200);
 });
 
 // fallback
-app.all("*", async (req: Request, res: Response) => {
+app.all("*", async (req, res) => {
   return res.send({
     detail: "This endpoint does not exist.",
     endpoint: { detail: `'${req.url}' does not exist.` },
   });
 });
 
-app.listen(port, () => {
+app.listen(3000, () => {
   logger.info("API running on port 3000");
 });
