@@ -1,4 +1,5 @@
 import { createLogger, format, transports } from "winston";
+import winston from "winston/lib/winston/config";
 
 // Console Log object, used to make my console logs better
 const logger = createLogger({
