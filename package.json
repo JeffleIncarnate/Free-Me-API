@@ -7,6 +7,8 @@
     "start": "nodemon src/index.ts",
     "dev": "pnpm dlx nodemon",
     "build": "rimraf ./build && tsc",
+    "ts.check": "tsc --project tsconfig.json",
+    "add-build": "git add dist",
     "pre-commit": [
       "ts.check",
       "build",
