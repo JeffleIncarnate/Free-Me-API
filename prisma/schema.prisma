@@ -59,7 +59,7 @@ model Client {
   timeline        Json
   socialMedia     Json
   feedBack        FeedbackClient[]
-  user            User    @relation(fields: [userId], references: [id])
+  user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId          String  @unique
 }
 
@@ -76,7 +76,7 @@ model Consultant {
   awards          String[]
   hobbies         String[]
   timeline        Json
-  user            User    @relation(fields: [userId], references: [id])
+  user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId          String  @unique
 }
 
@@ -85,7 +85,7 @@ model FeedbackConsultant {
   id              Int          @id @default(autoincrement())
   from            String
   feedback        String
-  consultant      Consultant   @relation(fields: [consultantId], references: [id])
+  consultant      Consultant   @relation(fields: [consultantId], references: [id], onDelete: Cascade)
   consultantId    Int          @unique
 }
 
@@ -93,7 +93,7 @@ model FeedbackClient {
   id              Int          @id @default(autoincrement())
   from            String
   feedback        String
-  client          Client       @relation(fields: [clientId], references: [id])
+  client          Client       @relation(fields: [clientId], references: [id], onDelete: Cascade)
   clientId        Int          @unique
 }
 

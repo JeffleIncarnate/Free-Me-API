@@ -5,6 +5,7 @@ import cors from "cors";
 import morgan from "morgan";
 
 import { logger } from "./v2/core/logger/logger";
+import { errorHandler } from "./v2/core/errors/handler";
 
 const app = express();
 
@@ -21,7 +22,7 @@ const createUser = require("./v1/routes/users/createUser");
 const jobOpportunities = require("./v1/routes/users/jobOpportunities");
 const verifyUserFromVerifyTable = require("./v1/routes/users/verifyUserFromVerifyTable");
 const updateUser = require("./v1/routes/users/updateUser");
-const deleteUser = require("./v1/routes/users/deleteUser");
+const deleteUserv1 = require("./v1/routes/users/deleteUser");
 
 const postConsultantNoAuth = require("./v1/routes/users/postConsultantNoAuth");
 const postClientNoAuth = require("./v1/routes/users/postClientNoAuth");
@@ -39,7 +40,7 @@ app.use("/freeme", createUser);
 app.use("/freeme", jobOpportunities);
 app.use("/freeme", verifyUserFromVerifyTable);
 app.use("/freeme", updateUser);
-app.use("/freeme", deleteUser);
+app.use("/freeme", deleteUserv1);
 
 app.use("/freeme", postConsultantNoAuth);
 app.use("/freeme", postClientNoAuth);
@@ -57,13 +58,15 @@ import { refresh } from "./v2/routes/auth/refresh";
 import { userPost } from "./v2/routes/user/create";
 import { allUsers } from "./v2/routes/user/get/all";
 import { self } from "./v2/routes/user/get/self";
+import { deleteUser } from "./v2/routes/user/delete";
 
 app.use("/v2/api/auth/login", login);
 app.use("/v2/api/auth/refresh", refresh);
 
-app.use("/v1/api/user", userPost);
-app.use("/v1/api/user", allUsers);
-app.use("/v1/api/user/self", self);
+app.use("/v2/api/user", userPost);
+app.use("/v2/api/user", allUsers);
+app.use("/v2/api/user/self", self);
+app.use("/v2/api/user/self", deleteUser);
 
 app.get("/", async (req, res) => {
   return res.sendStatus(200);
@@ -76,6 +79,8 @@ app.all("*", async (req, res) => {
     endpoint: { detail: `'${req.url}' does not exist.` },
   });
 });
+
+app.use(errorHandler);
 
 app.listen(3000, () => {
   logger.info("API running on port 3000");
