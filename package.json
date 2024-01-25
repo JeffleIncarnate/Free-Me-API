@@ -4,16 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/index.ts",
     "dev": "pnpm dlx nodemon",
     "build": "rimraf ./build && tsc",
-    "ts.check": "tsc --project tsconfig.json",
-    "add-build": "git add dist",
-    "pre-commit": [
-      "ts.check",
-      "build",
-      "add-build"
-    ]
+    "start": "pnpm run build && node build/index.js"
   },
   "keywords": [],
   "author": "",
@@ -28,9 +21,7 @@
     "@types/pg": "^8.10.9",
     "@types/ws": "^8.5.10",
     "nodemon": "^2.0.22",
-    "pre-commit": "^1.2.2",
     "prisma": "5.8.1",
-    "rimraf": "^5.0.5",
     "ts-node": "^10.9.2",
     "typescript": "^4.9.5"
   },
