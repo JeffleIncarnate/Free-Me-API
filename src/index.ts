@@ -4,6 +4,7 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import fs from "fs";
+import http from "http";
 import https from "https";
 
 import { logger } from "./v2/core/logger/logger";
@@ -14,6 +15,14 @@ const app = express();
 // Certificates
 const cert = fs.readFileSync(`${__dirname}/../cert.pem`, "utf-8");
 const key = fs.readFileSync(`${__dirname}/../key.pem`, "utf-8");
+
+const credentials = {
+  key,
+  cert,
+};
+
+const httpServer = http.createServer(app);
+const httpsServer = https.createServer(credentials, app);
 
 app.use(morgan("dev"));
 app.use(express.json());
@@ -88,8 +97,12 @@ app.all("*", async (req, res) => {
 
 app.use(errorHandler);
 
-const httpsServer = https.createServer({ key, cert }, app);
+// For http
+httpServer.listen(8080, () => {
+  logger.info("HTTP API running on port 8080");
+});
 
-httpsServer.listen(8080, () => {
-  logger.info("API running on port 8080");
+// For https
+httpsServer.listen(8443, () => {
+  logger.info("HTTPS API running on port 8080");
 });
