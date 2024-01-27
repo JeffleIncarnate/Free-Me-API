@@ -48,12 +48,12 @@ userPost.post(
       gst: req.body.gst,
       location: (req.body.location as string).toLowerCase(),
       pfp: "",
-      background: "",
+      banner: "",
       description: req.body.description,
     };
 
     user.pfp = setPfp(req.files);
-    user.background = setBackground(req.files);
+    user.banner = setBackground(req.files);
 
     try {
       if (user.type === "client") {
@@ -72,7 +72,7 @@ userPost.post(
             gst: user.gst,
             role: "GENERAL",
             profilePicture: user.pfp,
-            background: user.background,
+            banner: user.banner,
             followers: [],
             following: [],
             connections: [],
@@ -106,7 +106,7 @@ userPost.post(
             gst: user.gst,
             role: "GENERAL",
             profilePicture: user.pfp,
-            background: user.background,
+            banner: user.banner,
             followers: [],
             following: [],
             connections: [],
@@ -163,9 +163,9 @@ function setBackground(req: fileUpload.FileArray | null | undefined): string {
     return background;
   }
 
-  if (req.background === undefined) {
+  if (req.banner === undefined) {
     return background;
   }
 
-  return ((req.background as UploadedFile).data as Buffer).toString("base64");
+  return ((req.banner as UploadedFile).data as Buffer).toString("base64");
 }
