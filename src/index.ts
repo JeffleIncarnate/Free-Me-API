@@ -90,6 +90,6 @@ app.use(errorHandler);
 
 const httpsServer = https.createServer({ key, cert }, app);
 
-httpsServer.listen(3000, () => {
-  logger.info("API running on port 3000");
+httpsServer.listen(8080, () => {
+  logger.info("API running on port 8080");
 });
