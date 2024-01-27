@@ -3,11 +3,17 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
+import fs from "fs";
+import https from "https";
 
 import { logger } from "./v2/core/logger/logger";
 import { errorHandler } from "./v2/core/errors/handler";
 
 const app = express();
+
+// Certificates
+const cert = fs.readFileSync(`${__dirname}/../cert.pem`, "utf-8");
+const key = fs.readFileSync(`${__dirname}/../key.pem`, "utf-8");
 
 app.use(morgan("dev"));
 app.use(express.json());
@@ -82,6 +88,8 @@ app.all("*", async (req, res) => {
 
 app.use(errorHandler);
 
-app.listen(3000, () => {
+const httpsServer = https.createServer({ key, cert }, app);
+
+httpsServer.listen(3000, () => {
   logger.info("API running on port 3000");
 });
