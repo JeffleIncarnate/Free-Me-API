@@ -36,6 +36,7 @@ self.get("/", authorizeRequest, async (req, res, next) => {
       },
       include: {
         clientProfile: true,
+        post: true,
       },
     });
 
@@ -60,6 +61,7 @@ self.get("/", authorizeRequest, async (req, res, next) => {
     },
     include: {
       consultantProfile: true,
+      post: true,
     },
   });
 

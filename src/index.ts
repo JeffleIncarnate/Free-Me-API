@@ -74,6 +74,8 @@ import { userPost } from "./v2/routes/user/create";
 import { allUsers } from "./v2/routes/user/get/all";
 import { self } from "./v2/routes/user/get/self";
 import { deleteUser } from "./v2/routes/user/delete";
+import { createPost } from "./v2/routes/user/post/create";
+import { getPost } from "./v2/routes/user/post/get";
 
 app.use("/v2/api/auth/login", login);
 app.use("/v2/api/auth/refresh", refresh);
@@ -82,6 +84,8 @@ app.use("/v2/api/user", userPost);
 app.use("/v2/api/user", allUsers);
 app.use("/v2/api/user/self", self);
 app.use("/v2/api/user/self", deleteUser);
+app.use("/v2/api/user/posts", createPost);
+app.use("/v2/api/post", getPost);
 
 app.get("/", async (req, res) => {
   return res.sendStatus(200);

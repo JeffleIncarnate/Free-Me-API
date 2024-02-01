@@ -46,6 +46,7 @@ model User {
   connections         String[]
   clientProfile       Client?
   consultantProfile   Consultant?
+  post                Post[]
 }
 
 model Client {
@@ -99,4 +100,14 @@ model FeedbackClient {
 
 model RefreshToken {
   id String @id
+}
+
+model Post {
+  postId      String     @id @unique @default(uuid())
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postText    String
+  postImages  String[]
+  likes       String[]
+  postTime    DateTime   @default(now())
+  userId      String
 }
